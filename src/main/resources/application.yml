@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: spring-boot-rest
+  datasource:
+    username: ${DB_USER:smallFastUser}
+    password: ${DB_PASSWORD:smallFastPassword}
+    url: jdbc:oracle:thin:@${DB_HOST:localhost}:${DB_PORT:1521}:${DB_SID:XE}
+    driver-class-name: oracle.jdbc.OracleDriver
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.Oracle10gDialect
+    show-sql: true
+  liquibase:
+    change-log: classpath:/db/master.xml
+    user: ${DB_USER:smallFastUser}
+    password: ${DB_PASSWORD:smallFastPassword}
+
+server:
+  port: 8081

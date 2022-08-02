@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-transaction-status" author="sokkun">
+        <createTable tableName="transaction_status">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction_status"/>
+            </column>
+            <column name="name" type="VARCHAR2(255)"/>
+            <column name="description" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

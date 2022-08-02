@@ -1,0 +1,4 @@
+CREATE USER smallFastUser IDENTIFIED BY smallFastPassword;
+GRANT CONNECT, RESOURCE TO smallFastUser;
+ALTER USER smallFastUser QUOTA UNLIMITED ON USERS;
+exit;
