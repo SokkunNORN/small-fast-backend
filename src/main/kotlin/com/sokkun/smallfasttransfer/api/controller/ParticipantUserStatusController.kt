@@ -1,6 +1,8 @@
 package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserStatusReq
+import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
+import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.model.ParticipantUserStatus
 import com.sokkun.smallfasttransfer.service.imp.ParticipantUserStatusService
 import org.springframework.web.bind.annotation.*
@@ -11,18 +13,19 @@ class ParticipantUserStatusController(
     private val service: ParticipantUserStatusService
 ) {
     @GetMapping
-    fun getAllStatus(): List<ParticipantUserStatus> = service.getAllStatus()
+    fun getAllStatus(): ResponseWrapper<List<ParticipantUserStatus>> = ok(service.getAllStatus())
 
     @GetMapping("/{id}")
-    fun getStatusById(@PathVariable("id") id: Long): ParticipantUserStatus? = service.getStatusById(id)
+    fun getStatusById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserStatus?> =
+        ok(service.getStatusById(id))
 
     @PostMapping
-    fun createStatus(@RequestBody participantUserStatusReq: ParticipantUserStatusReq): ParticipantUserStatus? =
-        service.createStatus(participantUserStatusReq)
+    fun createStatus(@RequestBody participantUserStatusReq: ParticipantUserStatusReq):
+        ResponseWrapper<ParticipantUserStatus?> = ok(service.createStatus(participantUserStatusReq))
 
     @PutMapping("/{id}")
     fun updateStatus(
         @PathVariable("id") id: Long,
         @RequestBody participantUserStatusReq: ParticipantUserStatusReq
-    ): ParticipantUserStatus? = service.updateStatus(id, participantUserStatusReq)
+    ): ResponseWrapper<ParticipantUserStatus?> = ok(service.updateStatus(id, participantUserStatusReq))
 }
