@@ -2,6 +2,8 @@ package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
+import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
+import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.service.imp.ParticipantUserService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,19 +21,19 @@ class ParticipantUserController(
 ) {
 
     @GetMapping
-    fun getAllUser(): List<ParticipantUserRes> = service.getAllUser()
+    fun getAllUser(): ResponseWrapper<List<ParticipantUserRes>> = ok(service.getAllUser())
 
     @GetMapping("/{id}")
-    fun getUserById(@PathVariable("id") id: Long): ParticipantUserRes? = service.getUserById(id)
+    fun getUserById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserRes> = ok(service.getUserById(id))
 
     @PostMapping
-    fun createUser(@RequestBody participantUserReq: ParticipantUserReq): ParticipantUserRes? =
-        service.createUser(participantUserReq)
+    fun createUser(@RequestBody participantUserReq: ParticipantUserReq): ResponseWrapper<ParticipantUserRes> =
+        ok(service.createUser(participantUserReq))
 
     @PutMapping("/{id}")
-    fun updateUser(@PathVariable("id") id: Long, @RequestBody participantUserReq: ParticipantUserReq): ParticipantUserRes? =
-        service.updateUser(id, participantUserReq)
+    fun updateUser(@PathVariable("id") id: Long, @RequestBody participantUserReq: ParticipantUserReq):
+        ResponseWrapper<ParticipantUserRes> = ok(service.updateUser(id, participantUserReq))
 
     @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable("id") id: Long): String = service.deleteUser(id)
+    fun deleteUser(@PathVariable("id") id: Long): ResponseWrapper<String> = ok(service.deleteUser(id))
 }

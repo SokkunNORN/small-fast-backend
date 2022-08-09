@@ -2,13 +2,22 @@ package com.sokkun.smallfasttransfer.service.imp
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
+import com.sokkun.smallfasttransfer.api.response.helper.Pagination
+import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
+import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
+import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.service.IParticipantService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestParam
 
 @Service
 class ParticipantService(
@@ -17,13 +26,13 @@ class ParticipantService(
 ) : IParticipantService {
     override fun getAllParticipant(): List<ParticipantRes> = partRepo.findAll().map { mapToParticipantRes(it) }
 
-    override fun getParticipantById(id: Long): ParticipantRes? {
-        val part = partRepo.findByIdOrNull(id) ?: return null
+    override fun getParticipantById(id: Long): ParticipantRes {
+        val part = getOrElseThrow("Participant", id, partRepo::findById)
 
         return mapToParticipantRes(part)
     }
 
-    override fun createParticipant(participantReq: ParticipantReq): ParticipantRes? {
+    override fun createParticipant(participantReq: ParticipantReq): ParticipantRes {
         val part = Participant(
             0,
             fullName = participantReq.fullName,
@@ -42,8 +51,8 @@ class ParticipantService(
         return mapToParticipantRes(newPart)
     }
 
-    override fun updateParticipant(id: Long, participantReq: ParticipantReq): ParticipantRes? {
-        getParticipantById(id) ?: return null
+    override fun updateParticipant(id: Long, participantReq: ParticipantReq): ParticipantRes {
+        getParticipantById(id)
 
         val part = Participant(
             id,

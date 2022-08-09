@@ -4,6 +4,7 @@ import com.sokkun.smallfasttransfer.api.request.ParticipantUserReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
 import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
+import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.model.ParticipantUser
@@ -20,13 +21,13 @@ class ParticipantUserService(
 ) : IParticipantUserService {
     override fun getAllUser(): List<ParticipantUserRes> = partUserRepo.findAll().map { mapToParticipantUserRes(it) }
 
-    override fun getUserById(id: Long): ParticipantUserRes? {
-        val user = partUserRepo.findByIdOrNull(id) ?: return null
+    override fun getUserById(id: Long): ParticipantUserRes {
+        val user = getOrElseThrow("Participant User", id, partUserRepo::findById)
 
         return mapToParticipantUserRes(user)
     }
 
-    override fun createUser(participantUserReq: ParticipantUserReq): ParticipantUserRes? {
+    override fun createUser(participantUserReq: ParticipantUserReq): ParticipantUserRes {
 
         val user = ParticipantUser(
             0,
@@ -43,8 +44,8 @@ class ParticipantUserService(
         return mapToParticipantUserRes(newUser)
     }
 
-    override fun updateUser(id: Long, participantUserReq: ParticipantUserReq): ParticipantUserRes? {
-        getUserById(id) ?: return null
+    override fun updateUser(id: Long, participantUserReq: ParticipantUserReq): ParticipantUserRes {
+        getUserById(id)
 
         val user = ParticipantUser(
             id,
@@ -62,7 +63,7 @@ class ParticipantUserService(
     }
 
     override fun deleteUser(id: Long): String {
-        getUserById(id) ?: return "ERROR: The Participant User Id[$id] does not found!!"
+        getUserById(id)
 
         partUserRepo.deleteById(id)
 

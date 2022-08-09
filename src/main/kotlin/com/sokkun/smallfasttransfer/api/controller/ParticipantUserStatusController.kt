@@ -16,16 +16,16 @@ class ParticipantUserStatusController(
     fun getAllStatus(): ResponseWrapper<List<ParticipantUserStatus>> = ok(service.getAllStatus())
 
     @GetMapping("/{id}")
-    fun getStatusById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserStatus?> =
+    fun getStatusById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserStatus> =
         ok(service.getStatusById(id))
 
     @PostMapping
     fun createStatus(@RequestBody participantUserStatusReq: ParticipantUserStatusReq):
-        ResponseWrapper<ParticipantUserStatus?> = ok(service.createStatus(participantUserStatusReq))
+        ResponseWrapper<ParticipantUserStatus> = ok(service.createStatus(participantUserStatusReq))
 
     @PutMapping("/{id}")
     fun updateStatus(
         @PathVariable("id") id: Long,
         @RequestBody participantUserStatusReq: ParticipantUserStatusReq
-    ): ResponseWrapper<ParticipantUserStatus?> = ok(service.updateStatus(id, participantUserStatusReq))
+    ): ResponseWrapper<ParticipantUserStatus> = ok(service.updateStatus(id, participantUserStatusReq))
 }
