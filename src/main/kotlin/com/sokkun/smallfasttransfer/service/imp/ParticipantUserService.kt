@@ -35,8 +35,8 @@ class ParticipantUserService(
         val username = getOrElseThrow("username", participantUserReq.username)
         val statusId = getOrElseThrow("statusId", participantUserReq.statusId)
         val participantId = getOrElseThrow("participantId", participantUserReq.participantId)
-        getOrElseThrow("Participant Status", statusId, partUserStatusRepo::findById)
-        getOrElseThrow("Participant User Status", statusId, partRepo::findById)
+        getOrElseThrow("Participant User Status id", statusId, partUserStatusRepo::findById)
+        getOrElseThrow("Participant id", participantId, partRepo::findById)
 
         val user = ParticipantUser(
             0,
