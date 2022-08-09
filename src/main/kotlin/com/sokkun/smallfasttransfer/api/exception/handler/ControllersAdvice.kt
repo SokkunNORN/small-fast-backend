@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
+import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
 class ControllersAdvice {
@@ -85,9 +88,39 @@ class ControllersAdvice {
 
     @ExceptionHandler(RecordExistException::class)
     fun recordAlreadyExistsException(request: HttpServletRequest?, e: RecordExistException):
-            ResponseEntity<ResponseWrapper<Any>> {
+        ResponseEntity<ResponseWrapper<Any>> {
         log.error("RecordAlreadyException: ", e)
         val response = ResponseWrapper.error(error = ErrorCode.RECORD_ALREADY_EXISTED, message = e.message ?: "")
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun httpRequestMethodNotSupportedException(
+        request: HttpServletRequest?,
+        e:
+        HttpRequestMethodNotSupportedException
+    ): ResponseEntity<ResponseWrapper<Any>> {
+        log.error("HttpRequestMethodNotSupportedException", e)
+        val response = ResponseWrapper.error(error = ErrorCode.METHOD_NOT_ALLOWED, message = "")
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response)
+    }
+
+    @ExceptionHandler(NoHandlerFoundException::class)
+    fun noHandlerFoundException(request: HttpServletRequest?, e: NoHandlerFoundException):
+        ResponseEntity<ResponseWrapper<Any>> {
+        log.error("URL_NOT_FOUND")
+        val response = ResponseWrapper.error(error = ErrorCode.URL_NOT_FOUND, message = "")
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun missingServletRequestParameterException(request: HttpServletRequest?, e:
+        MissingServletRequestParameterException): ResponseEntity<ResponseWrapper<Any>> {
+        log.error("MissingServletRequestParameterException", e)
+        val response = ResponseWrapper.error(
+            error = ErrorCode.MISSING_REQUIRED_FILTERING_PARAM,
+            message = e.parameterName
+        )
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
     }
 }

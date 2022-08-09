@@ -2,13 +2,13 @@ package com.sokkun.smallfasttransfer.api.request
 
 
 data class ParticipantReq(
-    val fullName: String,
-    val shortName: String,
-    val participantCode: String,
-    val bicfiCode: String,
-    val bankCode: String,
-    val phone: String?,
-    val email: String?,
-    val address: String?,
-    val statusId: Long
+    val fullName: String? = null,
+    val shortName: String? = null,
+    val participantCode: String? = null,
+    val bicfiCode: String? = null,
+    val bankCode: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+    val address: String? = null,
+    val statusId: Long? = null
 )

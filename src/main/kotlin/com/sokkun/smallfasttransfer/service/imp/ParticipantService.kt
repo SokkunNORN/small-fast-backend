@@ -2,22 +2,12 @@ package com.sokkun.smallfasttransfer.service.imp
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
-import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
-import com.sokkun.smallfasttransfer.api.response.helper.Pagination
-import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
-import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.model.Participant
-import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.service.IParticipantService
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestParam
 
 @Service
 class ParticipantService(
@@ -33,17 +23,24 @@ class ParticipantService(
     }
 
     override fun createParticipant(participantReq: ParticipantReq): ParticipantRes {
+        val fullName = getOrElseThrow("fullName", participantReq.fullName)
+        val shortName = getOrElseThrow("shortName", participantReq.shortName)
+        val partCode = getOrElseThrow("participantCode", participantReq.participantCode)
+        val bicfiCode = getOrElseThrow("bicfiCode", participantReq.bicfiCode)
+        val bankCode = getOrElseThrow("bankCode", participantReq.bankCode)
+        val statusId = getOrElseThrow("statusId", participantReq.statusId)
+
         val part = Participant(
             0,
-            fullName = participantReq.fullName,
-            shortName = participantReq.shortName,
-            participantCode = participantReq.participantCode,
-            bicfiCode = participantReq.bicfiCode,
-            bankCode = participantReq.bankCode,
+            fullName = fullName,
+            shortName = shortName,
+            participantCode = partCode,
+            bicfiCode = bicfiCode,
+            bankCode = bankCode,
             phone = participantReq.phone,
             email = participantReq.email,
             address = participantReq.address,
-            statusId = participantReq.statusId
+            statusId = statusId
         )
 
         val newPart = partRepo.save(part)
@@ -53,18 +50,24 @@ class ParticipantService(
 
     override fun updateParticipant(id: Long, participantReq: ParticipantReq): ParticipantRes {
         getParticipantById(id)
+        val fullName = getOrElseThrow("fullName", participantReq.fullName)
+        val shortName = getOrElseThrow("shortName", participantReq.shortName)
+        val partCode = getOrElseThrow("participantCode", participantReq.participantCode)
+        val bicfiCode = getOrElseThrow("bicfiCode", participantReq.bicfiCode)
+        val bankCode = getOrElseThrow("bankCode", participantReq.bankCode)
+        val statusId = getOrElseThrow("statusId", participantReq.statusId)
 
         val part = Participant(
             id,
-            fullName = participantReq.fullName,
-            shortName = participantReq.shortName,
-            participantCode = participantReq.participantCode,
-            bicfiCode = participantReq.bicfiCode,
-            bankCode = participantReq.bankCode,
+            fullName = fullName,
+            shortName = shortName,
+            participantCode = partCode,
+            bicfiCode = bicfiCode,
+            bankCode = bankCode,
             phone = participantReq.phone,
             email = participantReq.email,
             address = participantReq.address,
-            statusId = participantReq.statusId
+            statusId = statusId
         )
 
         val newPart = partRepo.save(part)

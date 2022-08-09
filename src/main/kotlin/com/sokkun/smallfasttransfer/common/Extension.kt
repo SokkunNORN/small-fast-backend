@@ -33,6 +33,10 @@ fun <T> getOrElseThrow(name: String, field: String, loader: (String) -> Optional
     return loader(field).orElseThrow { throw ParamNotFoundException("$name[$field]") }
 }
 
+fun <T> getOrElseThrow(name: String, field: T?): T {
+    return field ?: throw ParamNotFoundException("The param[$name]")
+}
+
 fun <T> Optional<T>.orElseThrow(msg: String): T {
     return this.orElseThrow { throw ParamNotFoundException(msg) }
 }

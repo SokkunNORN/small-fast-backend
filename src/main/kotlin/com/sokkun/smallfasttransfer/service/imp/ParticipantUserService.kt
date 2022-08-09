@@ -28,15 +28,19 @@ class ParticipantUserService(
     }
 
     override fun createUser(participantUserReq: ParticipantUserReq): ParticipantUserRes {
+        val fullName = getOrElseThrow("fullName", participantUserReq.fullName)
+        val username = getOrElseThrow("username", participantUserReq.username)
+        val statusId = getOrElseThrow("statusId", participantUserReq.statusId)
+        val participantId = getOrElseThrow("participantId", participantUserReq.participantId)
 
         val user = ParticipantUser(
             0,
-            fullName = participantUserReq.fullName,
-            username = participantUserReq.username,
+            fullName = fullName,
+            username = username,
             phone = participantUserReq.phone,
             email = participantUserReq.email,
-            statusId = participantUserReq.statusId,
-            participantId = participantUserReq.participantId
+            statusId = statusId,
+            participantId = participantId
         )
 
         val newUser = partUserRepo.save(user)
@@ -46,15 +50,19 @@ class ParticipantUserService(
 
     override fun updateUser(id: Long, participantUserReq: ParticipantUserReq): ParticipantUserRes {
         getUserById(id)
+        val fullName = getOrElseThrow("fullName", participantUserReq.fullName)
+        val username = getOrElseThrow("username", participantUserReq.username)
+        val statusId = getOrElseThrow("statusId", participantUserReq.statusId)
+        val participantId = getOrElseThrow("participantId", participantUserReq.participantId)
 
         val user = ParticipantUser(
             id,
-            fullName = participantUserReq.fullName,
-            username = participantUserReq.username,
+            fullName = fullName,
+            username = username,
             phone = participantUserReq.phone,
             email = participantUserReq.email,
-            statusId = participantUserReq.statusId,
-            participantId = participantUserReq.participantId
+            statusId = statusId,
+            participantId = participantId
         )
 
         val newUser = partUserRepo.save(user)

@@ -1,10 +1,10 @@
 package com.sokkun.smallfasttransfer.api.request
 
 data class ParticipantUserReq(
-    val fullName: String,
-    val username: String,
-    val phone: String?,
-    val email: String?,
-    val statusId: Long,
-    val participantId: Long
+    val fullName: String? = null,
+    val username: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+    val statusId: Long? = null,
+    val participantId: Long? = null
 )
