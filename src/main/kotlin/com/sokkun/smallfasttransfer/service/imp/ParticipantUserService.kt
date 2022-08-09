@@ -8,7 +8,9 @@ import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.model.ParticipantUser
+import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserRepository
+import com.sokkun.smallfasttransfer.repository.ParticipantUserStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantUserService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service
 @Service
 class ParticipantUserService(
     private val partUserRepo: ParticipantUserRepository,
-    private val partUserStatusService: ParticipantUserStatusService,
+    private val partUserStatusRepo: ParticipantUserStatusRepository,
+    private val partRepo: ParticipantRepository,
     private val partService: ParticipantService
 ) : IParticipantUserService {
     override fun getAllUser(): List<ParticipantUserRes> = partUserRepo.findAll().map { mapToParticipantUserRes(it) }
@@ -32,6 +35,8 @@ class ParticipantUserService(
         val username = getOrElseThrow("username", participantUserReq.username)
         val statusId = getOrElseThrow("statusId", participantUserReq.statusId)
         val participantId = getOrElseThrow("participantId", participantUserReq.participantId)
+        getOrElseThrow("Participant Status", statusId, partUserStatusRepo::findById)
+        getOrElseThrow("Participant User Status", statusId, partRepo::findById)
 
         val user = ParticipantUser(
             0,
@@ -54,6 +59,8 @@ class ParticipantUserService(
         val username = getOrElseThrow("username", participantUserReq.username)
         val statusId = getOrElseThrow("statusId", participantUserReq.statusId)
         val participantId = getOrElseThrow("participantId", participantUserReq.participantId)
+        getOrElseThrow("Participant Status", statusId, partUserStatusRepo::findById)
+        getOrElseThrow("Participant User Status", statusId, partRepo::findById)
 
         val user = ParticipantUser(
             id,
@@ -79,14 +86,16 @@ class ParticipantUserService(
     }
 
     private fun mapToParticipantUserRes(partUser: ParticipantUser) : ParticipantUserRes {
+        val status = partUserStatusRepo.findByIdOrNull(partUser.statusId)
+        val participant = partService.mapToParticipantRes(partRepo.findByIdOrNull(partUser.participantId)!!)
         return ParticipantUserRes(
             partUser.id,
             partUser.fullName,
             partUser.username,
             partUser.phone,
             partUser.email,
-            status = partUserStatusService.getStatusById(partUser.id),
-            participant = partService.getParticipantById(partUser.id),
+            status = status,
+            participant = participant,
             partUser.createdAt.khFormat(),
             partUser.updatedAt.khFormat()
         )

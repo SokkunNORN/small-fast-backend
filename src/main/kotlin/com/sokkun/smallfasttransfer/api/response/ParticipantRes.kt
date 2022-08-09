@@ -2,6 +2,7 @@ package com.sokkun.smallfasttransfer.api.response
 
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import java.time.LocalDateTime
+import java.util.*
 
 data class ParticipantRes(
     val id: Long,

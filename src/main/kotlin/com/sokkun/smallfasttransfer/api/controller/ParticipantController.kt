@@ -17,10 +17,7 @@ class ParticipantController(
 ) {
 
     @GetMapping
-    fun getAllParticipant(
-        req: RequestParam?,
-        @SortDefault(sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
-    ): ResponseWrapper<List<ParticipantRes>> = ok(service.getAllParticipant())
+    fun getAllParticipant(): ResponseWrapper<List<ParticipantRes>> = ok(service.getAllParticipant())
 
     @GetMapping("/{id}")
     fun getParticipantById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantRes> = ok(service.getParticipantById(id))

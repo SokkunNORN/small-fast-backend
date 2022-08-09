@@ -6,13 +6,15 @@ import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
+import com.sokkun.smallfasttransfer.repository.ParticipantStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantService
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class ParticipantService(
     private val partRepo: ParticipantRepository,
-    private val partStatusService: ParticipantStatusService
+    private val partStatusRepo: ParticipantStatusRepository
 ) : IParticipantService {
     override fun getAllParticipant(): List<ParticipantRes> = partRepo.findAll().map { mapToParticipantRes(it) }
 
@@ -29,6 +31,7 @@ class ParticipantService(
         val bicfiCode = getOrElseThrow("bicfiCode", participantReq.bicfiCode)
         val bankCode = getOrElseThrow("bankCode", participantReq.bankCode)
         val statusId = getOrElseThrow("statusId", participantReq.statusId)
+        getOrElseThrow("Participant Status", statusId, partStatusRepo::findById)
 
         val part = Participant(
             0,
@@ -56,6 +59,7 @@ class ParticipantService(
         val bicfiCode = getOrElseThrow("bicfiCode", participantReq.bicfiCode)
         val bankCode = getOrElseThrow("bankCode", participantReq.bankCode)
         val statusId = getOrElseThrow("statusId", participantReq.statusId)
+        getOrElseThrow("Participant Status", statusId, partStatusRepo::findById)
 
         val part = Participant(
             id,
@@ -83,7 +87,8 @@ class ParticipantService(
         return "The Participant Id[$id] is deleted successfully!!"
     }
 
-    private fun mapToParticipantRes(participant: Participant) : ParticipantRes {
+    fun mapToParticipantRes(participant: Participant) : ParticipantRes {
+        val status = partStatusRepo.findByIdOrNull(participant.statusId)
         return ParticipantRes(
             participant.id,
             participant.fullName,
@@ -94,7 +99,7 @@ class ParticipantService(
             participant.phone,
             participant.email,
             participant.address,
-            status = partStatusService.getStatusById(participant.id),
+            status = status,
             participant.createdAt.khFormat(),
             participant.updatedAt.khFormat()
         )

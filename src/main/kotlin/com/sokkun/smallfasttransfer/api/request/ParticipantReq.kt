@@ -1,6 +1,5 @@
 package com.sokkun.smallfasttransfer.api.request
 
-
 data class ParticipantReq(
     val fullName: String? = null,
     val shortName: String? = null,
