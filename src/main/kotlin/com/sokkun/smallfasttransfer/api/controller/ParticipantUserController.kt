@@ -2,9 +2,11 @@ package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.api.response.helper.ok
-import com.sokkun.smallfasttransfer.service.imp.ParticipantUserService
+import com.sokkun.smallfasttransfer.service.IParticipantUserService
+import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,11 +19,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/participant/user")
 class ParticipantUserController(
-    private val service: ParticipantUserService
+    private val service: IParticipantUserService
 ) {
 
     @GetMapping
-    fun getAllUser(): ResponseWrapper<List<ParticipantUserRes>> = ok(service.getAllUser())
+    fun getAllUser(participantUserReq: ParticipantUserReq, pageable: Pageable):
+        ResponseWrapper<PageResponse<ParticipantUserRes>> = ok(service.getAllUser(participantUserReq, pageable))
 
     @GetMapping("/{id}")
     fun getUserById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserRes> = ok(service.getUserById(id))

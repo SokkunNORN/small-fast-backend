@@ -3,8 +3,11 @@ package com.sokkun.smallfasttransfer.service.imp
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
 import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
+import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
+import com.sokkun.smallfasttransfer.common.toPageResponse
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.model.ParticipantUser
@@ -12,6 +15,7 @@ import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantUserService
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -22,7 +26,15 @@ class ParticipantUserService(
     private val partRepo: ParticipantRepository,
     private val partService: ParticipantService
 ) : IParticipantUserService {
-    override fun getAllUser(): List<ParticipantUserRes> = partUserRepo.findAll().map { mapToParticipantUserRes(it) }
+    override fun getAllUser(
+        participantUserReq: ParticipantUserReq,
+        pageable: Pageable
+    ): PageResponse<ParticipantUserRes> {
+        pageable.checkingSortFields(ParticipantUser::class.java)
+        val all = partUserRepo.findAll(pageable)
+
+        return all.map { mapToParticipantUserRes(it) }.toPageResponse()
+    }
 
     override fun getUserById(id: Long): ParticipantUserRes {
         val user = getOrElseThrow("Participant User", id, partUserRepo::findById)

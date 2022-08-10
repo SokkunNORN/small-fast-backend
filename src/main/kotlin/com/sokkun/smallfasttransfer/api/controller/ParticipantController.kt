@@ -2,22 +2,22 @@ package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.api.response.helper.ok
-import com.sokkun.smallfasttransfer.service.imp.ParticipantService
+import com.sokkun.smallfasttransfer.service.IParticipantService
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
-import org.springframework.data.web.SortDefault
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/participant")
 class ParticipantController(
-    private val service: ParticipantService
+    private val service: IParticipantService
 ) {
 
     @GetMapping
-    fun getAllParticipant(): ResponseWrapper<List<ParticipantRes>> = ok(service.getAllParticipant())
+    fun getAllParticipant(participantReq: ParticipantReq, pageable: Pageable):
+        ResponseWrapper<PageResponse<ParticipantRes>> = ok(service.getAllParticipant(participantReq, pageable))
 
     @GetMapping("/{id}")
     fun getParticipantById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantRes> = ok(service.getParticipantById(id))

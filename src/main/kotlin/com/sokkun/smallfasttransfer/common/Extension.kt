@@ -1,9 +1,16 @@
 package com.sokkun.smallfasttransfer.common
 
+import com.sokkun.smallfasttransfer.api.exception.ClientErrorException
 import com.sokkun.smallfasttransfer.api.exception.IdNotFoundException
 import com.sokkun.smallfasttransfer.api.exception.ParamNotFoundException
 import com.sokkun.smallfasttransfer.api.exception.RecordExistException
+import com.sokkun.smallfasttransfer.api.exception.handler.ErrorCode
 import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
+import com.sokkun.smallfasttransfer.api.response.helper.Pagination
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.mapping.PropertyPath
+import org.springframework.data.mapping.PropertyReferenceException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -46,4 +53,24 @@ fun Boolean.existsAndThrow(msg: String): Boolean {
     return this
 }
 
-fun <T> toPageResponse() {  }
+fun <T> Pageable.checkingSortFields(type: Class<T>) {
+    this.sort.toList().map {
+        try {
+            PropertyPath.from(it.property, type)
+        } catch (e: PropertyReferenceException) {
+            throw ClientErrorException(ErrorCode.UNRECOGNIZED_FIELD, e.propertyName)
+        }
+    }
+}
+
+fun <T> Page<T>.toPageResponse(): PageResponse<T> {
+    return PageResponse(
+        content = this.content,
+        pagination = Pagination(
+            currentPage = this.pageable.pageNumber,
+            pageSize = this.pageable.pageSize,
+            totalElements = this.totalElements,
+            totalPages = this.totalPages
+        )
+    )
+}

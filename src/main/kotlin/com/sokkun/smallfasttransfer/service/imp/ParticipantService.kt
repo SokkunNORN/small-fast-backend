@@ -2,12 +2,16 @@ package com.sokkun.smallfasttransfer.service.imp
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
+import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
+import com.sokkun.smallfasttransfer.common.toPageResponse
 import com.sokkun.smallfasttransfer.model.Participant
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantService
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -16,7 +20,15 @@ class ParticipantService(
     private val partRepo: ParticipantRepository,
     private val partStatusRepo: ParticipantStatusRepository
 ) : IParticipantService {
-    override fun getAllParticipant(): List<ParticipantRes> = partRepo.findAll().map { mapToParticipantRes(it) }
+    override fun getAllParticipant(
+        participantReq: ParticipantReq,
+        pageable: Pageable
+    ): PageResponse<ParticipantRes> {
+        pageable.checkingSortFields(Participant::class.java)
+        val all = partRepo.findAll(pageable)
+
+        return all.map { mapToParticipantRes(it) }.toPageResponse()
+    }
 
     override fun getParticipantById(id: Long): ParticipantRes {
         val part = getOrElseThrow("Participant", id, partRepo::findById)

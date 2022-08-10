@@ -4,13 +4,13 @@ import com.sokkun.smallfasttransfer.api.request.ParticipantStatusReq
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.model.ParticipantStatus
-import com.sokkun.smallfasttransfer.service.imp.ParticipantStatusService
+import com.sokkun.smallfasttransfer.service.IParticipantStatusService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/participant/status")
 class ParticipantStatusController(
-    private val service: ParticipantStatusService
+    private val service: IParticipantStatusService
 ) {
     @GetMapping
     fun getAllStatus(): ResponseWrapper<List<ParticipantStatus>> = ok(service.getAllStatus())
