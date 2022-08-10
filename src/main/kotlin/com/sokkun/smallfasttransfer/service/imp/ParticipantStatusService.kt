@@ -17,20 +17,15 @@ class ParticipantStatusService(
         getOrElseThrow("Participant Status", id, partiStatusRepo::findById)
 
     override fun createStatus(statusReq: ParticipantStatusReq): ParticipantStatus {
-        val name = getOrElseThrow("name", statusReq.name)
-        val description = getOrElseThrow("description", statusReq.description)
-
-        val status = ParticipantStatus(0, name, description)
+        val status = ParticipantStatus(0, statusReq.name!!, statusReq.description!!)
 
         return partiStatusRepo.save(status)
     }
 
     override fun updateStatus(id: Long, statusReq: ParticipantStatusReq): ParticipantStatus {
         getStatusById(id)
-        val name = getOrElseThrow("name", statusReq.name)
-        val description = getOrElseThrow("description", statusReq.description)
 
-        val status = ParticipantStatus(id, name, description)
+        val status = ParticipantStatus(id, statusReq.name!!, statusReq.description!!)
 
         return partiStatusRepo.save(status)
     }

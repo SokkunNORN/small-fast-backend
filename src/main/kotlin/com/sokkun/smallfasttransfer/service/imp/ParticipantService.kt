@@ -37,14 +37,14 @@ class ParticipantService(
     }
 
     override fun createParticipant(participantReq: ParticipantReq): ParticipantRes {
-        val status = getOrElseThrow("Participant Status", participantReq.statusId, partStatusRepo::findById)
+        val status = getOrElseThrow("Participant Status", participantReq.statusId!!, partStatusRepo::findById)
         val part = Participant(
             0,
-            fullName = participantReq.fullName,
-            shortName = participantReq.shortName,
-            participantCode = participantReq.participantCode,
-            bicfiCode = participantReq.bicfiCode,
-            bankCode = participantReq.bankCode,
+            fullName = participantReq.fullName!!,
+            shortName = participantReq.shortName!!,
+            participantCode = participantReq.participantCode!!,
+            bicfiCode = participantReq.bicfiCode!!,
+            bankCode = participantReq.bankCode!!,
             phone = participantReq.phone,
             email = participantReq.email,
             address = participantReq.address
@@ -59,15 +59,15 @@ class ParticipantService(
 
     override fun updateParticipant(id: Long, participantReq: ParticipantReq): ParticipantRes {
         getParticipantById(id)
-        val status = getOrElseThrow("Participant Status", participantReq.statusId, partStatusRepo::findById)
+        val status = getOrElseThrow("Participant Status", participantReq.statusId!!, partStatusRepo::findById)
 
         val part = Participant(
             id,
-            fullName = participantReq.fullName,
-            shortName = participantReq.shortName,
-            participantCode = participantReq.participantCode,
-            bicfiCode = participantReq.bicfiCode,
-            bankCode = participantReq.bankCode,
+            fullName = participantReq.fullName!!,
+            shortName = participantReq.shortName!!,
+            participantCode = participantReq.participantCode!!,
+            bicfiCode = participantReq.bicfiCode!!,
+            bankCode = participantReq.bankCode!!,
             phone = participantReq.phone,
             email = participantReq.email,
             address = participantReq.address

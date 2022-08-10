@@ -38,13 +38,13 @@ class ParticipantUserService(
     }
 
     override fun createUser(participantUserReq: ParticipantUserReq): ParticipantUserRes {
-        val status = getOrElseThrow("Participant User Status id", participantUserReq.statusId, partUserStatusRepo::findById)
-        val participant = getOrElseThrow("Participant id", participantUserReq.participantId, partRepo::findById)
+        val status = getOrElseThrow("Participant User Status id", participantUserReq.statusId!!, partUserStatusRepo::findById)
+        val participant = getOrElseThrow("Participant id", participantUserReq.participantId!!, partRepo::findById)
 
         val user = ParticipantUser(
             0,
-            fullName = participantUserReq.fullName,
-            username = participantUserReq.username,
+            fullName = participantUserReq.fullName!!,
+            username = participantUserReq.username!!,
             phone = participantUserReq.phone,
             email = participantUserReq.email
         ).apply {
@@ -59,13 +59,13 @@ class ParticipantUserService(
 
     override fun updateUser(id: Long, participantUserReq: ParticipantUserReq): ParticipantUserRes {
         getUserById(id)
-        val status = getOrElseThrow("Participant User Status id", participantUserReq.statusId, partUserStatusRepo::findById)
-        val participant = getOrElseThrow("Participant id", participantUserReq.participantId, partRepo::findById)
+        val status = getOrElseThrow("Participant User Status id", participantUserReq.statusId!!, partUserStatusRepo::findById)
+        val participant = getOrElseThrow("Participant id", participantUserReq.participantId!!, partRepo::findById)
 
         val user = ParticipantUser(
             id,
-            fullName = participantUserReq.fullName,
-            username = participantUserReq.username,
+            fullName = participantUserReq.fullName!!,
+            username = participantUserReq.username!!,
             phone = participantUserReq.phone,
             email = participantUserReq.email
         ).apply {

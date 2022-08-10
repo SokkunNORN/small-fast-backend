@@ -3,15 +3,15 @@ package com.sokkun.smallfasttransfer.api.request
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 
 data class ParticipantReq(
-    val fullName: String,
-    val shortName: String,
-    val participantCode: String,
-    val bicfiCode: String,
-    val bankCode: String,
+    val fullName: String?,
+    val shortName: String?,
+    val participantCode: String?,
+    val bicfiCode: String?,
+    val bankCode: String?,
     val phone: String? = null,
     val email: String? = null,
     val address: String? = null,
-    val statusId: Long
+    val statusId: Long?
 ){
     init {
         getOrElseThrow("fullName", fullName)
