@@ -1,7 +1,11 @@
 package com.sokkun.smallfasttransfer.model
 
+import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
+import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -31,11 +35,27 @@ data class ParticipantUser(
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now()
+) {
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    lateinit var status: ParticipantUserStatus
 
-    @Column(name = "status_id")
-    val statusId: Long,
+    @ManyToOne
+    @JoinColumn(name = "participant_id")
+    lateinit var participant: Participant
 
-    @Column(name = "participant_id")
-    val participantId: Long,
-)
+    fun toResponse(): ParticipantUserRes {
+        return ParticipantUserRes(
+            id = this.id,
+            fullName = this.fullName,
+            username = this.username,
+            phone = this.phone,
+            email = this.email,
+            status = status,
+            participant = participant.toResponse(),
+            createdAt = this.createdAt.khFormat(),
+            updatedAt = this.updatedAt.khFormat()
+        )
+    }
+}

@@ -1,6 +1,7 @@
 package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserReq
+import com.sokkun.smallfasttransfer.api.request.filter.ParticipantUserFilterRes
 import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
 import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
@@ -23,8 +24,8 @@ class ParticipantUserController(
 ) {
 
     @GetMapping
-    fun getAllUser(participantUserReq: ParticipantUserReq, pageable: Pageable):
-        ResponseWrapper<PageResponse<ParticipantUserRes>> = ok(service.getAllUser(participantUserReq, pageable))
+    fun getAllUser(filterRes: ParticipantUserFilterRes?, pageable: Pageable):
+        ResponseWrapper<PageResponse<ParticipantUserRes>> = ok(service.getAllUser(filterRes, pageable))
 
     @GetMapping("/{id}")
     fun getUserById(@PathVariable("id") id: Long): ResponseWrapper<ParticipantUserRes> = ok(service.getUserById(id))

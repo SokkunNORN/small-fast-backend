@@ -1,5 +1,7 @@
 package com.sokkun.smallfasttransfer.model
 
+import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
@@ -43,8 +45,26 @@ data class Participant(
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now()
+) {
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    lateinit var status: ParticipantStatus
 
-    @Column(name = "status_id")
-    val statusId: Long,
-)
+    fun toResponse(): ParticipantRes {
+        return ParticipantRes(
+            id = this.id,
+            fullName = this.fullName,
+            shortName = this.shortName,
+            participantCode = this.participantCode,
+            bicfiCode = this.bicfiCode,
+            bankCode = this.bankCode,
+            phone = this.phone,
+            email = this.email,
+            address = this.address,
+            status = status,
+            createdAt = this.createdAt.khFormat(),
+            updatedAt = this.updatedAt.khFormat()
+        )
+    }
+}
