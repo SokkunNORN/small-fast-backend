@@ -1,17 +1,23 @@
 package com.sokkun.smallfasttransfer.service.imp
 
+import com.sokkun.smallfasttransfer.api.exception.handler.ErrorCode
 import com.sokkun.smallfasttransfer.api.request.filter.ParticipantFilterReq
 import com.sokkun.smallfasttransfer.api.request.ParticipantReq
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
 import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
+import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.common.toPageResponse
-import com.sokkun.smallfasttransfer.model.Participant
+import com.sokkun.smallfasttransfer.domain.model.Participant
+import com.sokkun.smallfasttransfer.domain.spec.ParticipantSpec
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantService
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,8 +30,12 @@ class ParticipantService(
         pageable: Pageable
     ): PageResponse<ParticipantRes> {
         pageable.checkingSortFields(Participant::class.java)
-        val all = partRepo.findAll(pageable)
-        println("The func get all participant service is called... $all")
+        val searchSpec = filterReq?.q?.let { ParticipantSpec.genSearchSpec(it.lowercase()) }
+        val statusSpec = filterReq?.statusId?.let { ParticipantSpec.genFilterParticipantStatusSpec(it) }
+        val specification = Specification.where(searchSpec).and(statusSpec)
+        println(filterReq?.dateFrom)
+
+        val all = partRepo.findAll(specification, pageable)
 
         return all.map { it.toResponse() }.toPageResponse()
     }
@@ -81,7 +91,7 @@ class ParticipantService(
     }
 
     override fun deleteParticipant(id: Long): String {
-        getParticipantById(id) ?: return "ERROR: The Participant Id[$id] does not found!!"
+        getParticipantById(id)
 
         partRepo.deleteById(id)
 

@@ -1,6 +1,7 @@
 package com.sokkun.smallfasttransfer.repository
 
-import com.sokkun.smallfasttransfer.model.ParticipantUser
-import org.springframework.data.jpa.repository.JpaRepository
+import com.sokkun.smallfasttransfer.domain.model.ParticipantUser
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.repository.PagingAndSortingRepository
 
-interface ParticipantUserRepository: JpaRepository<ParticipantUser, Long>
+interface ParticipantUserRepository: PagingAndSortingRepository<ParticipantUser, Long>, JpaSpecificationExecutor<ParticipantUser>

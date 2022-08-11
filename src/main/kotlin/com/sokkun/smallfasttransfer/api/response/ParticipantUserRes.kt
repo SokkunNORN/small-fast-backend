@@ -1,6 +1,6 @@
 package com.sokkun.smallfasttransfer.api.response
 
-import com.sokkun.smallfasttransfer.model.ParticipantUserStatus
+import com.sokkun.smallfasttransfer.domain.model.ParticipantUserStatus
 
 data class ParticipantUserRes(
     val id: Long,

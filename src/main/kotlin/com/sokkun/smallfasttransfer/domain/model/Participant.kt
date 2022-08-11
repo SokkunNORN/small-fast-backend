@@ -1,33 +1,43 @@
-package com.sokkun.smallfasttransfer.model
+package com.sokkun.smallfasttransfer.domain.model
 
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
-import com.sokkun.smallfasttransfer.api.response.ParticipantUserRes
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "participant_user")
-data class ParticipantUser(
+@Table(name = "participant")
+data class Participant(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqParticipantUser")
-    @SequenceGenerator(name = "seqParticipantUser", sequenceName = "SEQ_PARTICIPANT_USER", initialValue = 10, allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqParticipant")
+    @SequenceGenerator(name = "seqParticipant", sequenceName = "SEQ_PARTICIPANT", initialValue = 10, allocationSize = 10)
     val id: Long = 0L,
 
     @Column(name = "full_name")
     val fullName: String,
 
-    @Column(name = "username")
-    val username: String,
+    @Column(name = "short_name")
+    val shortName: String,
+
+    @Column(name = "participant_code")
+    val participantCode: String,
+
+    @Column(name = "bicfi_code")
+    val bicfiCode: String,
+
+    @Column(name = "bank_code")
+    val bankCode: String,
 
     @Column(name = "phone")
-    val phone: String? = null,
+    val phone: String?,
 
     @Column(name = "email")
-    val email: String? = null,
+    val email: String?,
+
+    @Column(name = "address")
+    val address: String?,
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -39,21 +49,20 @@ data class ParticipantUser(
 ) {
     @ManyToOne
     @JoinColumn(name = "status_id")
-    lateinit var status: ParticipantUserStatus
+    lateinit var status: ParticipantStatus
 
-    @ManyToOne
-    @JoinColumn(name = "participant_id")
-    lateinit var participant: Participant
-
-    fun toResponse(): ParticipantUserRes {
-        return ParticipantUserRes(
+    fun toResponse(): ParticipantRes {
+        return ParticipantRes(
             id = this.id,
             fullName = this.fullName,
-            username = this.username,
+            shortName = this.shortName,
+            participantCode = this.participantCode,
+            bicfiCode = this.bicfiCode,
+            bankCode = this.bankCode,
             phone = this.phone,
             email = this.email,
+            address = this.address,
             status = status,
-            participant = participant.toResponse(),
             createdAt = this.createdAt.khFormat(),
             updatedAt = this.updatedAt.khFormat()
         )

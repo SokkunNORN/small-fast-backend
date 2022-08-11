@@ -2,7 +2,7 @@ package com.sokkun.smallfasttransfer.service.imp
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserStatusReq
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
-import com.sokkun.smallfasttransfer.model.ParticipantUserStatus
+import com.sokkun.smallfasttransfer.domain.model.ParticipantUserStatus
 import com.sokkun.smallfasttransfer.repository.ParticipantUserStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantUserStatusService
 import org.springframework.stereotype.Service

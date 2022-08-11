@@ -1,7 +1,7 @@
 package com.sokkun.smallfasttransfer.service
 
 import com.sokkun.smallfasttransfer.api.request.ParticipantUserStatusReq
-import com.sokkun.smallfasttransfer.model.ParticipantUserStatus
+import com.sokkun.smallfasttransfer.domain.model.ParticipantUserStatus
 
 interface IParticipantUserStatusService {
     fun getAllStatus(): List<ParticipantUserStatus>

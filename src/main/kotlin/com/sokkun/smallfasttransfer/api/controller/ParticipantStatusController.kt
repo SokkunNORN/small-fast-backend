@@ -3,7 +3,7 @@ package com.sokkun.smallfasttransfer.api.controller
 import com.sokkun.smallfasttransfer.api.request.ParticipantStatusReq
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.api.response.helper.ok
-import com.sokkun.smallfasttransfer.model.ParticipantStatus
+import com.sokkun.smallfasttransfer.domain.model.ParticipantStatus
 import com.sokkun.smallfasttransfer.service.IParticipantStatusService
 import org.springframework.web.bind.annotation.*
 

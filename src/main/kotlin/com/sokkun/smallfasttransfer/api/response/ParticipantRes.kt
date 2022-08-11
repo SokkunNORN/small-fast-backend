@@ -1,6 +1,6 @@
 package com.sokkun.smallfasttransfer.api.response
 
-import com.sokkun.smallfasttransfer.model.ParticipantStatus
+import com.sokkun.smallfasttransfer.domain.model.ParticipantStatus
 import java.time.LocalDateTime
 import java.util.*
 

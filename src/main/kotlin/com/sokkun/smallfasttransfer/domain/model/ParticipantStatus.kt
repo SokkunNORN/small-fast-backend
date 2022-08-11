@@ -1,4 +1,4 @@
-package com.sokkun.smallfasttransfer.model
+package com.sokkun.smallfasttransfer.domain.model
 
 import javax.persistence.*
 
