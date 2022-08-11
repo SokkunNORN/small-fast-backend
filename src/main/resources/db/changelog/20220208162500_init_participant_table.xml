@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- SEQUENCE -->
+    <changeSet id="init-sequence" author="sokkun">
+        <createSequence sequenceName="SEQ_TRANSACTION_STATUS" startValue="10" incrementBy="10"/>
+        <createSequence sequenceName="SEQ_PARTICIPANT_STATUS" startValue="10" incrementBy="10"/>
+        <createSequence sequenceName="SEQ_PARTICIPANT" startValue="10" incrementBy="10"/>
+        <createSequence sequenceName="SEQ_PARTICIPANT_USER_STATUS" startValue="10" incrementBy="10"/>
+        <createSequence sequenceName="SEQ_PARTICIPANT_USER" startValue="10" incrementBy="10"/>
+    </changeSet>
+
+    <!-- TABLES -->
+    <changeSet id="init-tables-participant" author="sokkun">
+        <!-- PARTICIPANT STATUS -->
+        <createTable tableName="participant_status">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_participant_status"/>
+            </column>
+            <column name="name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+        </createTable>
+
+        <!-- PARTICIPANT -->
+        <createTable tableName="participant">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_participant"/>
+            </column>
+            <column name="full_name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="participant_code" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bicfi_code" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_code" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR2(255)"/>
+            <column name="email" type="VARCHAR2(255)"/>
+            <column name="address" type="VARCHAR2(255)"/>
+            <column name="created_at" type="TIMESTAMP(6)"/>
+            <column name="updated_at" type="TIMESTAMP(6)"/>
+            <column name="status_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- PARTICIPANT USER STATUS -->
+        <createTable tableName="participant_user_status">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_participant_user_status"/>
+            </column>
+            <column name="name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+        </createTable>
+
+        <!-- PARTICIPANT USER-->
+        <createTable tableName="participant_user">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_participant_user"/>
+            </column>
+            <column name="full_name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR2(255)"/>
+            <column name="email" type="VARCHAR2(255)"/>
+            <column name="created_at" type="TIMESTAMP(6)"/>
+            <column name="updated_at" type="TIMESTAMP(6)"/>
+            <column name="status_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="participant_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- FOREIGN KEY -->
+    <changeSet id="init-foreign-key-participant" author="sokkun">
+        <!-- PARTICIPANT -->
+        <addForeignKeyConstraint
+            baseTableName="participant"
+            baseColumnNames="status_id"
+            constraintName="fk_part_status"
+            referencedTableName="participant_status"
+            referencedColumnNames="id"
+        />
+
+        <!-- PARTICIPANT USER -->
+        <addForeignKeyConstraint
+            baseTableName="participant_user"
+            baseColumnNames="status_id"
+            constraintName="fk_user_status"
+            referencedTableName="participant_user_status"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="participant_user"
+            baseColumnNames="participant_id"
+            constraintName="fk_part_user_status"
+            referencedTableName="participant"
+            referencedColumnNames="id"
+            onDelete="CASCADE"
+        />
+    </changeSet>
+
+</databaseChangeLog>

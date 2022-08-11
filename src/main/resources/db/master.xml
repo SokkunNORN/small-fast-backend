@@ -5,5 +5,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="db/changelog/20220802153500_create_table_transaction_status.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/20220208162500_init_participant_table.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
