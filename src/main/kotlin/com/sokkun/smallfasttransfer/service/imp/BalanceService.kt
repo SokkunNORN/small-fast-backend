@@ -2,6 +2,7 @@ package com.sokkun.smallfasttransfer.service.imp
 
 import com.sokkun.smallfasttransfer.api.request.BalanceReq
 import com.sokkun.smallfasttransfer.api.response.BalanceRes
+import com.sokkun.smallfasttransfer.api.response.TotalBalanceRes
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.domain.model.Balance
 import com.sokkun.smallfasttransfer.domain.spec.BalanceSpec
@@ -29,7 +30,7 @@ class BalanceService(
         return all.map{ it.toResponse() }
     }
 
-    override fun getTotalBalanceOfParticipantId(id: Long): BigDecimal {
+    override fun getTotalBalanceOfParticipantId(id: Long): List<TotalBalanceRes> {
         TODO("Not yet implemented")
     }
 

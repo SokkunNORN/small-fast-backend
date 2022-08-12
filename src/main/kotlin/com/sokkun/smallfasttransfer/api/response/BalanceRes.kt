@@ -10,3 +10,9 @@ data class BalanceRes(
     val user: ParticipantUserShortRes,
     val participant: ParticipantShortRes
 )
+
+data class TotalBalanceRes(
+    val currency: CurrencyType,
+    val totalBalance: BigDecimal,
+    val participant: ParticipantShortRes
+)

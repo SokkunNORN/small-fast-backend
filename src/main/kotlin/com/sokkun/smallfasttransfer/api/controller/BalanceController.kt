@@ -1,6 +1,7 @@
 package com.sokkun.smallfasttransfer.api.controller
 
 import com.sokkun.smallfasttransfer.api.response.BalanceRes
+import com.sokkun.smallfasttransfer.api.response.TotalBalanceRes
 import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.service.IBalanceService
 import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
@@ -16,4 +17,8 @@ class BalanceController(
 ) {
     @GetMapping("/user/{id}")
     fun getByUser(@PathVariable id: Long): ResponseWrapper<List<BalanceRes>> = ok(service.getByUserId(id))
+
+//    @GetMapping("/participant/{id}")
+//    fun getTotalByParticipant(@PathVariable id: Long): ResponseWrapper<List<TotalBalanceRes>> =
+//        ok(service.getTotalBalanceOfParticipantId(id))
 }
