@@ -10,9 +10,9 @@ data class CurrencyType(
     @SequenceGenerator(name = "seqCurrencyType", sequenceName = "SEQ_CURRENCY_TYPE", initialValue = 10, allocationSize = 10)
     val id: Long = 0L,
 
-    @Column(name = "name")
-    val name: String,
+    @Column(name = "code")
+    val code: String,
 
-    @Column(name = "description")
-    val description: String?
+    @Column(name = "name")
+    val name: String?
 )

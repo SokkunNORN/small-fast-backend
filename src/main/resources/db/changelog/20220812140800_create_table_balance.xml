@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- SEQUENCE -->
+    <changeSet id="init-sequence-balance" author="sokkun">
+        <createSequence sequenceName="SEQ_BALANCE" startValue="10" incrementBy="10"/>
+    </changeSet>
+
+    <!-- TABLES -->
+    <changeSet id="init-tables-balance" author="sokkun">
+        <!-- CURRENCY -->
+        <createTable tableName="balance">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_balance"/>
+            </column>
+            <column name="balance" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="participant_user_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- FOREIGN KEY -->
+    <changeSet id="init-foreign-key-balance" author="sokkun">
+        <!-- CURRENCY TYPE -->
+        <addForeignKeyConstraint
+            baseTableName="balance"
+            baseColumnNames="currency_id"
+            constraintName="fk_currency_type"
+            referencedTableName="currency_type"
+            referencedColumnNames="id"
+        />
+
+        <!-- PARTICIPANT USER -->
+        <addForeignKeyConstraint
+            baseTableName="balance"
+            baseColumnNames="participant_user_id"
+            constraintName="fk_part_user"
+            referencedTableName="participant_user"
+            referencedColumnNames="id"
+        />
+    </changeSet>
+
+</databaseChangeLog>
