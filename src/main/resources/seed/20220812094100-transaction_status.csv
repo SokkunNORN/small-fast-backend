@@ -1,0 +1,6 @@
+id,name,description
+1,Pending,pending
+2,Signed and Closed,signed and closed
+3,Signed and Sent,signed and sent
+4,Settled,settled
+5,Unsettled,unsettled

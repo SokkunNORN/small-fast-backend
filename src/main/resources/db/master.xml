@@ -7,5 +7,6 @@
     <include file="db/changelog/20220802153500_create_table_transaction_status.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/20220208162500_init_participant_table.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/20221108034300_create_table_currency_type.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/20220812105000_init_data_transaction_status.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
