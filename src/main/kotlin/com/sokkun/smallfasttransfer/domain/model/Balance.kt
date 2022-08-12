@@ -28,7 +28,8 @@ data class Balance(
             id = this.id,
             balance = this.balance,
             currency = this.currencyType,
-            user = participantUser.toResponse()
+            user = participantUser.toShortResponse(),
+            participant = participantUser.participant.toShortResponse()
         )
     }
 }

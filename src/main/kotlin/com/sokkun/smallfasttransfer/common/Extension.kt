@@ -17,12 +17,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 object Extension {
-    fun LocalDate.khFormat () : String {
-        return this.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    fun LocalDate?.khFormat () : String? {
+        return this?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
     }
 
-    fun LocalDateTime.khFormat () : String {
-        return this.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
+    fun LocalDateTime?.khFormat () : String? {
+        return this?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))
     }
 }
 

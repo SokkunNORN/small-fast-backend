@@ -1,6 +1,7 @@
 package com.sokkun.smallfasttransfer.domain.model
 
 import com.sokkun.smallfasttransfer.api.response.ParticipantRes
+import com.sokkun.smallfasttransfer.api.response.ParticipantShortRes
 import com.sokkun.smallfasttransfer.common.Extension.khFormat
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -65,6 +66,14 @@ data class Participant(
             status = status,
             createdAt = this.createdAt.khFormat(),
             updatedAt = this.updatedAt.khFormat()
+        )
+    }
+
+    fun toShortResponse(): ParticipantShortRes {
+        return ParticipantShortRes(
+            id = this.id,
+            fullName = this.fullName,
+            shortName = this.shortName
         )
     }
 }

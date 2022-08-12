@@ -7,5 +7,6 @@ data class BalanceRes(
     val id: Long,
     val balance: BigDecimal,
     val currency: CurrencyType,
-    val user: ParticipantUserRes
+    val user: ParticipantUserShortRes,
+    val participant: ParticipantShortRes
 )
