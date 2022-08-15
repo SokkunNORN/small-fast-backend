@@ -29,7 +29,6 @@ class ParticipantService(
         val searchSpec = filterReq?.q?.let { ParticipantSpec.genSearchSpec(it.lowercase()) }
         val statusSpec = filterReq?.statusId?.let { ParticipantSpec.genFilterParticipantStatusSpec(it) }
         val specification = Specification.where(searchSpec).and(statusSpec)
-        println(filterReq?.dateFrom)
 
         val all = partRepo.findAll(specification, pageable)
 

@@ -16,10 +16,10 @@
             <column name="id" type="NUMBER(19)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_currency"/>
             </column>
-            <column name="name" type="VARCHAR2(255)">
+            <column name="code" type="VARCHAR2(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="TEXT"/>
+            <column name="name" type="TEXT"/>
         </createTable>
     </changeSet>
 

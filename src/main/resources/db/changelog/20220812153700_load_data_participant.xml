@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="sokkun" id="load-data-participant">
+        <!-- PARTICIPANT STATUS -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812154000-participant_status.csv"
+                  separator=","
+                  tableName="participant_status">
+            <column name="id" type="NUMERIC"/>
+            <column name="name" type="STRING"/>
+            <column name="description" type="STRING"/>
+        </loadData>
+
+        <!-- PARTICIPANT USER STATUS -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812154000-participant_user_status.csv"
+                  separator=","
+                  tableName="participant_user_status">
+            <column name="id" type="NUMERIC"/>
+            <column name="name" type="STRING"/>
+            <column name="description" type="STRING"/>
+        </loadData>
+
+        <!-- PARTICIPANT -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812134000-participant.csv"
+                  separator=","
+                  tableName="participant">
+            <column name="id" type="NUMERIC"/>
+            <column name="full_name" type="STRING"/>
+            <column name="short_name" type="STRING"/>
+            <column name="participant_code" type="STRING"/>
+            <column name="bicfi_code" type="STRING"/>
+            <column name="bank_code" type="STRING"/>
+            <column name="phone" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column name="address" type="STRING"/>
+            <column name="status_id" type="NUMERIC"/>
+        </loadData>
+
+        <!-- PARTICIPANT USER -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812134000-participant_user.csv"
+                  separator=","
+                  tableName="participant_user">
+            <column name="id" type="NUMERIC"/>
+            <column name="full_name" type="STRING"/>
+            <column name="username" type="STRING"/>
+            <column name="phone" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column name="status_id" type="NUMERIC"/>
+            <column name="participant_user_id" type="NUMERIC"/>
+        </loadData>
+
+        <!-- CURRENCY TYPE -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812160500-currency_type.csv"
+                  separator=","
+                  tableName="currency_type">
+            <column name="id" type="NUMERIC"/>
+            <column name="code" type="STRING"/>
+            <column name="name" type="STRING"/>
+        </loadData>
+
+        <!-- BALANCE -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220812154600-balance.csv"
+                  separator=","
+                  tableName="balance">
+            <column name="id" type="NUMERIC"/>
+            <column name="balance" type="NUMERIC"/>
+            <column name="currency_id" type="NUMERIC"/>
+            <column name="participant_user_id" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

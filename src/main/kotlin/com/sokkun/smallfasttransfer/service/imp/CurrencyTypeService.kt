@@ -16,8 +16,8 @@ class CurrencyTypeService(
     override fun create(currencyTypeReq: CurrencyTypeReq): CurrencyType {
         val currency = CurrencyType(
             0L,
-            currencyTypeReq.name!!,
-            currencyTypeReq.description
+            currencyTypeReq.code!!,
+            currencyTypeReq.name!!
         )
 
         return currencyTypeRepo.save(currency)
@@ -28,8 +28,8 @@ class CurrencyTypeService(
 
         val currency = CurrencyType(
             id,
-            currencyTypeReq.name!!,
-            currencyTypeReq.description
+            currencyTypeReq.code!!,
+            currencyTypeReq.name!!
         )
 
         return currencyTypeRepo.save(currency)

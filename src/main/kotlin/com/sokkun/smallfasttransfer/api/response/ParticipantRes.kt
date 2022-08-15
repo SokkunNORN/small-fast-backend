@@ -15,6 +15,12 @@ data class ParticipantRes(
     val email: String?,
     val address: String?,
     val status: ParticipantStatus?,
-    val createdAt: String,
-    val updatedAt: String
+    val createdAt: String?,
+    val updatedAt: String?
+)
+
+data class ParticipantShortRes(
+    val id: Long,
+    val fullName: String,
+    val shortName: String
 )
