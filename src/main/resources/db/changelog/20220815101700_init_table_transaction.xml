@@ -118,7 +118,6 @@
             referencedTableName="currency_type"
             referencedColumnNames="id"
         />
-
     </changeSet>
 
 </databaseChangeLog>

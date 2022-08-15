@@ -12,5 +12,6 @@
     <include file="db/changelog/20220812153700_load_data_participant.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/20220815101700_init_table_transaction.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/20220815105000_load_data_customer_account.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/20220815114000_add_unique_constraint.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
