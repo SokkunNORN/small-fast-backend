@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- SEQUENCE -->
+    <changeSet id="init-seq-transfer" author="sokkun">
+        <createSequence sequenceName="SEQ_CUSTOMER_ACCOUNT" startValue="10" incrementBy="10"/>
+        <createSequence sequenceName="SEQ_TRANSACTION" startValue="10" incrementBy="10"/>
+    </changeSet>
+
+    <!-- TABLE -->
+    <changeSet id="init-table-transaction" author="sokkun">
+
+        <!-- CUSTOMER ACCOUNT -->
+        <createTable tableName="customer_account">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_customer_account"/>
+            </column>
+            <column name="code" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_name" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="participant_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- TRANSACTION -->
+        <createTable tableName="transaction">
+            <column name="id" type="NUMBER(19)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
+            </column>
+            <column name="transaction_code" type="VARCHAR2(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="sender_bank_id" type="NUMBER(19)">
+                <constraints nullable="false" />
+            </column>
+            <column name="sender_account_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiver_bank_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiver_account_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_id" type="NUMBER(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="TEXT"/>
+            <column name="sentAt" type="TIMESTAMP(6)"/>
+            <column name="settledAt" type="TIMESTAMP(6)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- FOREIGN KEY -->
+    <changeSet id="add-fk-participant-id" author="sokkun">
+        <!-- CUSTOMER ACCOUNT -->
+        <addForeignKeyConstraint
+            baseTableName="customer_account"
+            baseColumnNames="participant_id"
+            constraintName="fk_participant"
+            referencedTableName="participant"
+            referencedColumnNames="id"
+        />
+
+        <!-- TRANSACTION -->
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="sender_bank_id"
+            constraintName="fk_sender_bank"
+            referencedTableName="participant"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="sender_account_id"
+            constraintName="fk_sender_account"
+            referencedTableName="customer_account"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="receiver_bank_id"
+            constraintName="fk_receiver_bank"
+            referencedTableName="participant"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="receiver_account_id"
+            constraintName="fk_receiver_account"
+            referencedTableName="customer_account"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="status_id"
+            constraintName="fk_transaction_status"
+            referencedTableName="transaction_status"
+            referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+            baseTableName="transaction"
+            baseColumnNames="currency_id"
+            constraintName="fk_transaction_currency_type"
+            referencedTableName="currency_type"
+            referencedColumnNames="id"
+        />
+
+    </changeSet>
+
+</databaseChangeLog>

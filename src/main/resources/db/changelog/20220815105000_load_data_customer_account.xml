@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="sokkun" id="load-data-participant">
+        <!-- CUSTOMER ACCOUNT -->
+        <loadData encoding="UTF-8"
+                  file="seed/20220815104500-customer_account.csv"
+                  separator=","
+                  tableName="customer_account">
+            <column name="id" type="NUMERIC"/>
+            <column name="code" type="STRING"/>
+            <column name="name" type="STRING"/>
+            <column name="participant_id" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

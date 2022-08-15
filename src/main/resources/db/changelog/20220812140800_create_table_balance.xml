@@ -34,7 +34,7 @@
         <addForeignKeyConstraint
             baseTableName="balance"
             baseColumnNames="currency_id"
-            constraintName="fk_currency_type"
+            constraintName="fk_balance_currency_type"
             referencedTableName="currency_type"
             referencedColumnNames="id"
         />
