@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
 
 interface BalanceRepository: JpaRepository<Balance, Long>, JpaSpecificationExecutor<Balance> {
-
-//    @Query("SELECT * FROM balance")
-//    fun getTotalByParticipant(id: Long): List<Balance>
+    @Query("SELECT * FROM balance", nativeQuery = true)
+    fun getAll(): List<Balance>
 }

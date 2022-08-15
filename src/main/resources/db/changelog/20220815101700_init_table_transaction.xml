@@ -59,8 +59,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="message" type="TEXT"/>
-            <column name="sentAt" type="TIMESTAMP(6)"/>
-            <column name="settledAt" type="TIMESTAMP(6)"/>
+            <column name="created_at" type="TIMESTAMP(6)"/>
+            <column name="sent_at" type="TIMESTAMP(6)"/>
+            <column name="settled_at" type="TIMESTAMP(6)"/>
         </createTable>
     </changeSet>
 
