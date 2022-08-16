@@ -3,18 +3,27 @@ package com.sokkun.smallfasttransfer.service.imp
 import com.sokkun.smallfasttransfer.api.exception.ClientErrorException
 import com.sokkun.smallfasttransfer.api.exception.handler.ErrorCode
 import com.sokkun.smallfasttransfer.api.request.TransactionReq
+import com.sokkun.smallfasttransfer.api.request.filter.TransactionFilterReq
 import com.sokkun.smallfasttransfer.api.response.TransactionRes
+import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
+import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
+import com.sokkun.smallfasttransfer.common.toPageResponse
 import com.sokkun.smallfasttransfer.domain.model.Transaction
 import com.sokkun.smallfasttransfer.domain.spec.BalanceSpec
+import com.sokkun.smallfasttransfer.domain.spec.TransactionSpec
+import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.PENDING
 import com.sokkun.smallfasttransfer.repository.*
 import com.sokkun.smallfasttransfer.service.ITransactionService
+import com.sokkun.smallfasttransfer.service.helper.TransactionHelperService
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
 class TransactionService(
+    private val transactionHelper: TransactionHelperService,
     private val transactionRepo: TransactionRepository,
     private val transactionStatusRepo: TransactionStatusRepository,
     private val participantRepo: ParticipantRepository,
@@ -23,7 +32,7 @@ class TransactionService(
     private val currencyRepo: CurrencyTypeRepository
 ) : ITransactionService {
     override fun create(transactionReq: TransactionReq): TransactionRes {
-        val transactionCode = "AA0003912"
+        val transactionCode = "Null"
         if (transactionReq.senderAccountId!! == transactionReq.receiverAccountId!!) {
             throw ClientErrorException(
                 ErrorCode.SENDER_AND_RECEIVER_BANK_EQUAL,
@@ -43,7 +52,7 @@ class TransactionService(
             )
         }
 
-        val transactionStatus = getOrElseThrow("Transaction Status", 1, transactionStatusRepo::findById)
+        val transactionStatus = getOrElseThrow("Transaction Status", PENDING.id, transactionStatusRepo::findById)
 
         val currentAmount = getBalanceOfParticipantUser(sender.id, currencyType.id)
 
@@ -62,31 +71,43 @@ class TransactionService(
             currency = currencyType
             status = transactionStatus
         }
+        val transactionSaved = transactionHelper.saveWithTransactionCode(transactionRepo.save(transaction))
 
-        return transactionRepo.save(transaction).toResponse()
+        return transactionSaved.toResponse()
     }
 
-    override fun getPendingTransaction(senderBankId: Long): List<TransactionRes> {
-        TODO("Not yet implemented")
+    override fun getPendingTransaction(
+        filterReq: TransactionFilterReq?,
+        pageable: Pageable
+    ): PageResponse<TransactionRes> {
+        pageable.checkingSortFields(Transaction::class.java)
+        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchWithEachStatusSpec(it.lowercase(), PENDING.id) }
+        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it, PENDING.id) }
+        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it, PENDING.id) }
+        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it, PENDING.id) }
+
+        val specification = Specification.where(searchSpec).and(senderBankSpec).and(receiverBankSpec).and(currencySpec)
+
+        return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
 
     override fun send(id: Long): TransactionRes {
         TODO("Not yet implemented")
     }
 
-    override fun getSentTransaction(senderBankId: Long): List<TransactionRes> {
+    override fun getSentTransaction(senderBankId: Long): PageResponse<TransactionRes> {
         TODO("Not yet implemented")
     }
 
-    override fun getOutGoingTransaction(senderBankId: Long): List<TransactionRes> {
+    override fun getOutGoingTransaction(senderBankId: Long): PageResponse<TransactionRes> {
         TODO("Not yet implemented")
     }
 
-    override fun getIncomingTransaction(receiverBankId: Long): List<TransactionRes> {
+    override fun getIncomingTransaction(receiverBankId: Long): PageResponse<TransactionRes> {
         TODO("Not yet implemented")
     }
 
-    override fun getTransactionHistory(participantId: Long): List<TransactionRes> {
+    override fun getTransactionHistory(participantId: Long): PageResponse<TransactionRes> {
         TODO("Not yet implemented")
     }
 

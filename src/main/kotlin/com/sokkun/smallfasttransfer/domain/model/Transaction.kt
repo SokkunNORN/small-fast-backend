@@ -16,7 +16,7 @@ data class Transaction(
     val id: Long = 0L,
 
     @Column(name = "transaction_code")
-    val transactionCode: String,
+    var transactionCode: String,
 
     @Column(name = "amount")
     val amount: BigDecimal,
