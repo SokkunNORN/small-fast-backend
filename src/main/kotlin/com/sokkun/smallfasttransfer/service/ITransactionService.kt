@@ -10,8 +10,7 @@ interface ITransactionService {
     fun create(transactionReq: TransactionReq): TransactionRes
     fun getPendingTransaction(filterReq: TransactionFilterReq?, pageable: Pageable): PageResponse<TransactionRes>
     fun send(id: Long): TransactionRes
-    fun getSentTransaction(senderBankId: Long): PageResponse<TransactionRes>
-    fun getOutGoingTransaction(senderBankId: Long): PageResponse<TransactionRes>
-    fun getIncomingTransaction(receiverBankId: Long): PageResponse<TransactionRes>
-    fun getTransactionHistory(participantId: Long): PageResponse<TransactionRes>
+    fun getSentTransaction(filterReq: TransactionFilterReq?, pageable: Pageable): PageResponse<TransactionRes>
+    fun getTransactionHistory(filterReq: TransactionFilterReq?, pageable: Pageable): PageResponse<TransactionRes>
+    fun getTransactionLog(filterReq: TransactionFilterReq?, pageable: Pageable): PageResponse<TransactionRes>
 }

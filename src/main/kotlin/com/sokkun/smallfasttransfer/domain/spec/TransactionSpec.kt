@@ -6,8 +6,8 @@ import javax.persistence.criteria.JoinType
 
 class TransactionSpec {
     companion object {
-        fun genSearchWithEachStatusSpec(value: String, statusId: Long? = null): Specification<Transaction> {
-            return Specification{ root, _, cd ->
+        fun genSearchSpec(value: String): Specification<Transaction> {
+            return Specification{ root, _, cb ->
                 val pattern = "%$value%"
                 val status = root.join<Transaction, TransactionStatus>(Transaction::status.name, JoinType.INNER)
                 val senderBank = root.join<Transaction, Participant>(Transaction::senderBank.name, JoinType.INNER)
@@ -16,63 +16,48 @@ class TransactionSpec {
                 val receiverAccount = root.join<Transaction, ParticipantUser>(Transaction::receiverAccount.name, JoinType.INNER)
                 val currency = root.join<Transaction, CurrencyType>(Transaction::currency.name, JoinType.INNER)
 
-                cd.and(
-                    statusId?.let { cd.equal(status.get<Long>(TransactionStatus::id.name), it) },
-                    cd.or(
-                        cd.like(cd.lower(root.get(Transaction::transactionCode.name)), pattern),
-                        cd.like(cd.lower(senderBank.get(Participant::fullName.name)), pattern),
-                        cd.like(cd.lower(receiverBank.get(Participant::fullName.name)), pattern),
-                        cd.like(cd.lower(senderAccount.get(ParticipantUser::fullName.name)), pattern),
-                        cd.like(cd.lower(receiverAccount.get(ParticipantUser::fullName.name)), pattern),
-                        cd.like(cd.lower(currency.get(CurrencyType::code.name)), pattern),
-                        cd.like(cd.lower(root.get(Transaction::message.name)), pattern),
-                        cd.like(cd.lower(status.get(TransactionStatus::name.name)), pattern)
-                    )
+                cb.or(
+                    cb.like(cb.lower(root.get(Transaction::transactionCode.name)), pattern),
+                    cb.like(cb.lower(senderBank.get(Participant::fullName.name)), pattern),
+                    cb.like(cb.lower(receiverBank.get(Participant::fullName.name)), pattern),
+                    cb.like(cb.lower(senderAccount.get(ParticipantUser::fullName.name)), pattern),
+                    cb.like(cb.lower(receiverAccount.get(ParticipantUser::fullName.name)), pattern),
+                    cb.like(cb.lower(currency.get(CurrencyType::code.name)), pattern),
+                    cb.like(cb.lower(root.get(Transaction::message.name)), pattern),
+                    cb.like(cb.lower(status.get(TransactionStatus::name.name)), pattern)
                 )
             }
         }
 
-        fun genFilterBySenderBank(participantId: Long, statusId: Long? = null): Specification<Transaction> {
-            return Specification{ root, _, cd ->
-                val status = root.join<Transaction, TransactionStatus>(Transaction::status.name, JoinType.INNER)
+        fun genFilterBySenderBank(participantId: Long): Specification<Transaction> {
+            return Specification{ root, _, cb ->
                 val senderBank = root.join<Transaction, Participant>(Transaction::senderBank.name, JoinType.INNER)
 
-                cd.and(
-                    statusId?.let { cd.equal(status.get<Long>(TransactionStatus::id.name), it) },
-                    cd.equal(senderBank.get<Long>(Participant::id.name), participantId)
-                )
+                cb.equal(senderBank.get<Long>(Participant::id.name), participantId)
             }
         }
 
-        fun genFilterByReceiverBank(participantId: Long, statusId: Long? = null): Specification<Transaction> {
-            return Specification{ root, _, cd ->
-                val status = root.join<Transaction, TransactionStatus>(Transaction::status.name, JoinType.INNER)
+        fun genFilterByReceiverBank(participantId: Long): Specification<Transaction> {
+            return Specification{ root, _, cb ->
                 val receiverBank = root.join<Transaction, Participant>(Transaction::receiverBank.name, JoinType.INNER)
 
-                cd.and(
-                    statusId?.let { cd.equal(status.get<Long>(TransactionStatus::id.name), it) },
-                    cd.equal(receiverBank.get<Long>(Participant::id.name), participantId)
-                )
+                cb.equal(receiverBank.get<Long>(Participant::id.name), participantId)
             }
         }
 
-        fun genFilterByStatus(id: Long): Specification<Transaction> {
-            return Specification{ root, _, cd ->
+        fun genFilterByStatus(ids: List<Long>): Specification<Transaction> {
+            return Specification{ root, _, _ ->
                 val status = root.join<Transaction, TransactionStatus>(Transaction::status.name, JoinType.INNER)
 
-                cd.equal(status.get<Long>(TransactionStatus::id.name), id)
+                status.`in`(ids)
             }
         }
 
-        fun genFilterByCurrency(currencyId: Long, statusId: Long? = null): Specification<Transaction> {
-            return Specification{ root, _, cd ->
-                val status = root.join<Transaction, TransactionStatus>(Transaction::status.name, JoinType.INNER)
+        fun genFilterByCurrency(currencyId: Long): Specification<Transaction> {
+            return Specification{ root, _, cb ->
                 val currency = root.join<Transaction, CurrencyType>(Transaction::currency.name, JoinType.INNER)
 
-                cd.and(
-                    statusId?.let { cd.equal(status.get<Long>(TransactionStatus::id.name), it) },
-                    cd.equal(currency.get<Long>(CurrencyType::id.name), currencyId)
-                )
+                cb.equal(currency.get<Long>(CurrencyType::id.name), currencyId)
             }
         }
     }

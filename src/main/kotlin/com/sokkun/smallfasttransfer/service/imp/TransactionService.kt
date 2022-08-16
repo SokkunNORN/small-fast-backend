@@ -12,6 +12,9 @@ import com.sokkun.smallfasttransfer.common.toPageResponse
 import com.sokkun.smallfasttransfer.domain.model.Transaction
 import com.sokkun.smallfasttransfer.domain.spec.BalanceSpec
 import com.sokkun.smallfasttransfer.domain.spec.TransactionSpec
+import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.Companion.VALID_HISTORY
+import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.Companion.VALID_LOG
+import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.SIGNED_AND_SENT
 import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.PENDING
 import com.sokkun.smallfasttransfer.repository.*
 import com.sokkun.smallfasttransfer.service.ITransactionService
@@ -81,12 +84,18 @@ class TransactionService(
         pageable: Pageable
     ): PageResponse<TransactionRes> {
         pageable.checkingSortFields(Transaction::class.java)
-        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchWithEachStatusSpec(it.lowercase(), PENDING.id) }
-        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it, PENDING.id) }
-        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it, PENDING.id) }
-        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it, PENDING.id) }
+        val statusIds = listOf(PENDING.id)
+        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchSpec(it.lowercase()) }
+        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it) }
+        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it) }
+        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it) }
+        val statusSpec = TransactionSpec.genFilterByStatus(statusIds)
 
-        val specification = Specification.where(searchSpec).and(senderBankSpec).and(receiverBankSpec).and(currencySpec)
+        val specification = Specification.where(statusSpec)
+            .and(searchSpec)
+            .and(senderBankSpec)
+            .and(receiverBankSpec)
+            .and(currencySpec)
 
         return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
@@ -95,20 +104,67 @@ class TransactionService(
         TODO("Not yet implemented")
     }
 
-    override fun getSentTransaction(senderBankId: Long): PageResponse<TransactionRes> {
-        TODO("Not yet implemented")
+    override fun getSentTransaction(
+        filterReq: TransactionFilterReq?,
+        pageable: Pageable
+    ): PageResponse<TransactionRes> {
+        pageable.checkingSortFields(Transaction::class.java)
+        val statusIds = listOf(SIGNED_AND_SENT.id)
+        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchSpec(it.lowercase()) }
+        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it) }
+        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it) }
+        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it) }
+        val statusSpec = TransactionSpec.genFilterByStatus(statusIds)
+
+        val specification = Specification.where(statusSpec)
+            .and(searchSpec)
+            .and(senderBankSpec)
+            .and(receiverBankSpec)
+            .and(currencySpec)
+
+        return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
 
-    override fun getOutGoingTransaction(senderBankId: Long): PageResponse<TransactionRes> {
-        TODO("Not yet implemented")
+    override fun getTransactionHistory(
+        filterReq: TransactionFilterReq?,
+        pageable: Pageable
+    ): PageResponse<TransactionRes> {
+        pageable.checkingSortFields(Transaction::class.java)
+        val statusIds = VALID_HISTORY
+        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchSpec(it.lowercase()) }
+        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it) }
+        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it) }
+        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it) }
+        val statusSpec = TransactionSpec.genFilterByStatus(statusIds)
+
+        val specification = Specification.where(statusSpec)
+            .and(searchSpec)
+            .and(senderBankSpec)
+            .and(receiverBankSpec)
+            .and(currencySpec)
+
+        return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
 
-    override fun getIncomingTransaction(receiverBankId: Long): PageResponse<TransactionRes> {
-        TODO("Not yet implemented")
-    }
+    override fun getTransactionLog(
+        filterReq: TransactionFilterReq?,
+        pageable: Pageable
+    ): PageResponse<TransactionRes> {
+        pageable.checkingSortFields(Transaction::class.java)
+        val statusIds = VALID_LOG
+        val searchSpec = filterReq?.q?.let { TransactionSpec.genSearchSpec(it.lowercase()) }
+        val senderBankSpec = filterReq?.senderBankId?.let { TransactionSpec.genFilterBySenderBank(it) }
+        val receiverBankSpec = filterReq?.receiverBankId?.let { TransactionSpec.genFilterByReceiverBank(it) }
+        val currencySpec = filterReq?.currencyId?.let { TransactionSpec.genFilterByCurrency(it) }
+        val statusSpec = TransactionSpec.genFilterByStatus(statusIds)
 
-    override fun getTransactionHistory(participantId: Long): PageResponse<TransactionRes> {
-        TODO("Not yet implemented")
+        val specification = Specification.where(statusSpec)
+            .and(searchSpec)
+            .and(senderBankSpec)
+            .and(receiverBankSpec)
+            .and(currencySpec)
+
+        return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
 
     fun getBalanceOfParticipantUser (userId: Long, currencyId: Long): BigDecimal {

@@ -8,5 +8,6 @@ enum class TransactionStatusEnum(val id: Long, val code: String?) {
 
     companion object {
         val VALID_HISTORY = listOf(SETTLED, UNSETTLED).map { it.id }
+        val VALID_LOG = listOf(PENDING, SIGNED_AND_SENT, SETTLED, UNSETTLED).map { it.id }
     }
 }
