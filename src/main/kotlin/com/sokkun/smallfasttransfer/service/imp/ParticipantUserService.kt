@@ -7,22 +7,28 @@ import com.sokkun.smallfasttransfer.api.response.helper.PageResponse
 import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.common.toPageResponse
+import com.sokkun.smallfasttransfer.domain.model.Balance
 import com.sokkun.smallfasttransfer.domain.model.ParticipantUser
-import com.sokkun.smallfasttransfer.domain.spec.ParticipantSpec
 import com.sokkun.smallfasttransfer.domain.spec.ParticipantUserSpec
+import com.sokkun.smallfasttransfer.enum.CurrencyTypeEnum.KHR
+import com.sokkun.smallfasttransfer.enum.CurrencyTypeEnum.USD
+import com.sokkun.smallfasttransfer.repository.CurrencyTypeRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserStatusRepository
 import com.sokkun.smallfasttransfer.service.IParticipantUserService
+import com.sokkun.smallfasttransfer.service.helper.BalanceHelperService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class ParticipantUserService(
     private val partUserRepo: ParticipantUserRepository,
     private val partUserStatusRepo: ParticipantUserStatusRepository,
-    private val partRepo: ParticipantRepository
+    private val partRepo: ParticipantRepository,
+    private val balanceHelperService: BalanceHelperService
 ) : IParticipantUserService {
     override fun getAllUser(
         filterRes: ParticipantUserFilterRes?,
@@ -61,6 +67,8 @@ class ParticipantUserService(
         }
 
         val newUser = partUserRepo.save(user)
+
+        balanceHelperService.createBalance(newUser)
 
         return newUser.toResponse()
     }
