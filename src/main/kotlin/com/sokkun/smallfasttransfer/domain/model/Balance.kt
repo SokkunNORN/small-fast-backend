@@ -13,7 +13,7 @@ data class Balance(
     val id: Long = 0L,
 
     @Column(name = "balance")
-    val balance: BigDecimal
+    var balance: BigDecimal
 ) {
     @ManyToOne
     @JoinColumn(name = "currency_id")

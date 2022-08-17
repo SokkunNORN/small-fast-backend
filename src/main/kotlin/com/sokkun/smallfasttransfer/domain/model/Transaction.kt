@@ -29,10 +29,10 @@ data class Transaction(
     val createdAt: LocalDateTime? = LocalDateTime.now(),
 
     @Column(name = "sent_at")
-    val sentAt: LocalDateTime? = null,
+    var sentAt: LocalDateTime? = null,
 
     @Column(name = "settled_at")
-    val settledAt: LocalDateTime? = null
+    var settledAt: LocalDateTime? = null
 ) {
     @ManyToOne
     @JoinColumn(name = "sender_bank_id")

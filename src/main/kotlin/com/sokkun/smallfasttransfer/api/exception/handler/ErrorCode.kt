@@ -56,5 +56,6 @@ enum class ErrorCode(val code: Int, val message: String) {
     INVALID_PATH_PARAM(52, "Invalid path param %s value"),
     PARAM_NOT_FOUND(53, "%s is not found."),
     INACTIVE_STATUS_FIELD(54, "%s is not active."),
-    INVALID_STATUS(55, "%s has invalid status.");
+    INVALID_STATUS(55, "%s has invalid status."),
+    NO_TRANSACTION_TO_SETTLE(56, "There are no any transactions for settle.");
 }

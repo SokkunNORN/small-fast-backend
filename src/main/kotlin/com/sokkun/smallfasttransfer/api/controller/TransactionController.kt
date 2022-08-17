@@ -43,4 +43,7 @@ class TransactionController(
     @GetMapping("/log")
     fun getLog(filterReq: TransactionFilterReq, pageable: Pageable): ResponseWrapper<PageResponse<TransactionRes>> =
         ok(service.getTransactionLog(filterReq, pageable))
+
+    @GetMapping("/settlement")
+    fun settlement(): ResponseWrapper<List<TransactionRes>> = ok(service.settlement())
 }

@@ -10,7 +10,6 @@ import com.sokkun.smallfasttransfer.common.checkingSortFields
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.common.toPageResponse
 import com.sokkun.smallfasttransfer.domain.model.Transaction
-import com.sokkun.smallfasttransfer.domain.spec.BalanceSpec
 import com.sokkun.smallfasttransfer.domain.spec.TransactionSpec
 import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.Companion.VALID_HISTORY
 import com.sokkun.smallfasttransfer.enum.TransactionStatusEnum.Companion.VALID_LOG
@@ -22,7 +21,7 @@ import com.sokkun.smallfasttransfer.service.helper.TransactionHelperService
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Service
 class TransactionService(
@@ -31,7 +30,6 @@ class TransactionService(
     private val transactionStatusRepo: TransactionStatusRepository,
     private val participantRepo: ParticipantRepository,
     private val participantUserRepo: ParticipantUserRepository,
-    private val balanceRepo: BalanceRepository,
     private val currencyRepo: CurrencyTypeRepository
 ) : ITransactionService {
     override fun create(transactionReq: TransactionReq): TransactionRes {
@@ -56,8 +54,6 @@ class TransactionService(
         }
 
         val transactionStatus = getOrElseThrow("Transaction Status", PENDING.id, transactionStatusRepo::findById)
-
-        val currentAmount = getBalanceOfParticipantUser(sender.id, currencyType.id)
 
         val transaction = Transaction(
             0,
@@ -107,6 +103,7 @@ class TransactionService(
             throw ClientErrorException(ErrorCode.INVALID_STATUS, "Transaction id[${transaction.id}]")
         }
         transaction.status = status
+        transaction.sentAt = LocalDateTime.now()
 
         return transactionRepo.save(transaction).toResponse()
     }
@@ -174,13 +171,14 @@ class TransactionService(
         return transactionRepo.findAll(specification, pageable).map { it.toResponse() }.toPageResponse()
     }
 
-    fun getBalanceOfParticipantUser (userId: Long, currencyId: Long): BigDecimal {
-        val userSpec = BalanceSpec.genFindByUserIdAndCurrencyId(userId, currencyId)
-        val specification = Specification.where(userSpec)
+    override fun settlement(): List<TransactionRes> {
+        val transaction = transactionRepo.getSentTransactions()
+        if (transaction.size < 1) {
+            throw ClientErrorException(ErrorCode.NO_TRANSACTION_TO_SETTLE, "")
+        }
+        val settledTransaction = transaction.map { transactionHelper.settlement(it) }
 
-        val accountBalance = balanceRepo.findOne(specification)
-        if (accountBalance.isEmpty) throw ClientErrorException(ErrorCode.ID_NOT_FOUND, "Account Balance")
-
-        return accountBalance.get().balance
+        return settledTransaction.map { it.toResponse() }
     }
+
 }
