@@ -24,7 +24,7 @@ class TransactionController(
     fun create(@RequestBody transactionReq: TransactionReq): ResponseWrapper<TransactionRes> =
         ok(service.create(transactionReq))
 
-    @PostMapping("/sent/{id}")
+    @PostMapping("/send/{id}")
     fun sentTransaction(@PathVariable id: Long): ResponseWrapper<TransactionRes> = ok(service.send(id))
 
     @GetMapping("/pending")
