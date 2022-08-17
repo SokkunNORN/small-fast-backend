@@ -10,5 +10,4 @@ interface IBalanceService {
     fun getByUserId(id: Long): List<BalanceRes>
     fun getTotalBalanceOfParticipantId(id: Long): List<TotalBalanceRes>
     fun create(balance: BalanceReq): Balance
-    fun update(id: Long, balance: BalanceReq): Balance
 }

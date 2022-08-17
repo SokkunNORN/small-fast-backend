@@ -47,20 +47,4 @@ class BalanceService(
 
         return balanceRepo.save(newBalance)
     }
-
-    override fun update(id: Long, balance: BalanceReq): Balance {
-        getOrElseThrow("Balance Id", id)
-        val currency = getOrElseThrow("Currency", balance.currencyId!!, currencyRepo::findById)
-        val user = getOrElseThrow("Participant User", balance.participantUserId!!, participantUserRepo::findById)
-        val newBalance = Balance(
-            id,
-            balance.balance!!
-        ).apply {
-            currencyType = currency
-            participantUser = user
-        }
-
-        return balanceRepo.save(newBalance)
-    }
-
 }
