@@ -55,5 +55,6 @@ enum class ErrorCode(val code: Int, val message: String) {
     INVALID_TRANSFER_AMOUNT_WITH_KHR(51, "TransferAmount[%s] is invalid for CurrencyCode[KHR]."),
     INVALID_PATH_PARAM(52, "Invalid path param %s value"),
     PARAM_NOT_FOUND(53, "%s is not found."),
-    INACTIVE_STATUS_FIELD(54, "%s is not active.");
+    INACTIVE_STATUS_FIELD(54, "%s is not active."),
+    INVALID_STATUS(55, "%s has invalid status.");
 }

@@ -101,7 +101,14 @@ class TransactionService(
     }
 
     override fun send(id: Long): TransactionRes {
-        TODO("Not yet implemented")
+        val transaction = getOrElseThrow("Transaction", id, transactionRepo::findById)
+        val status = getOrElseThrow("Transaction status", SIGNED_AND_SENT.id, transactionStatusRepo::findById)
+        if (transaction.status.id != PENDING.id) {
+            throw ClientErrorException(ErrorCode.INVALID_STATUS, "Transaction id[${transaction.id}]")
+        }
+        transaction.status = status
+
+        return transactionRepo.save(transaction).toResponse()
     }
 
     override fun getSentTransaction(
