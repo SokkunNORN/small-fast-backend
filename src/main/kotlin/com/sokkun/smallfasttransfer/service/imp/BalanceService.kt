@@ -36,7 +36,7 @@ class BalanceService(
     override fun getTotalBalanceOfParticipantId(id: Long): List<TotalBalanceRes> {
         getOrElseThrow("Participant", id, participantRepo::findById)
 
-        val balance = balanceRepo.findTotalBalanceParticipant(id)
+        val balance = balanceRepo.findTotalBalanceParticipant(participantId = id)
 
         return balance.map { toResponseTotalBalance(it) }
     }
