@@ -12,7 +12,7 @@ data class BalanceRes(
 )
 
 data class TotalBalanceRes(
-    val currency: CurrencyType,
     val totalBalance: BigDecimal,
-    val participant: ParticipantShortRes
+    val participant: ParticipantShortRes,
+    val currency: CurrencyType
 )

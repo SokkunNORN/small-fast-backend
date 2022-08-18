@@ -172,8 +172,9 @@ class TransactionService(
     }
 
     override fun settlement(): List<TransactionRes> {
-        val transaction = transactionRepo.getSentTransactions()
-        if (transaction.size < 1) {
+        getOrElseThrow("Status", SIGNED_AND_SENT.id)
+        val transaction = transactionRepo.findAllByStatusId(SIGNED_AND_SENT.id)
+        if (transaction.isEmpty()) {
             throw ClientErrorException(ErrorCode.NO_TRANSACTION_TO_SETTLE, "")
         }
         val settledTransaction = transaction.map { transactionHelper.settlement(it) }

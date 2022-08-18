@@ -18,7 +18,7 @@ class BalanceController(
     @GetMapping("/user/{id}")
     fun getByUser(@PathVariable id: Long): ResponseWrapper<List<BalanceRes>> = ok(service.getByUserId(id))
 
-//    @GetMapping("/participant/{id}")
-//    fun getTotalByParticipant(@PathVariable id: Long): ResponseWrapper<List<TotalBalanceRes>> =
-//        ok(service.getTotalBalanceOfParticipantId(id))
+    @GetMapping("/participant/{id}")
+    fun getTotalByParticipant(@PathVariable id: Long): ResponseWrapper<List<TotalBalanceRes>> =
+        ok(service.getTotalBalanceOfParticipantId(id))
 }
