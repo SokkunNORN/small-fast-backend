@@ -12,5 +12,7 @@ interface TransactionRepository:
     JpaRepository<Transaction, Long>
 {
     @Query(value = "SELECT t FROM Transaction t WHERE t.status.id = 2 ORDER BY t.sentAt ASC")
-    fun getSentTransactions(): MutableList<Transaction>
+    fun getSentTransactions(): List<Transaction>
+
+    fun findAllByStatusId(statusId: Long): List<Transaction>
 }

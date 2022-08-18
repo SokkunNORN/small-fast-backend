@@ -5,9 +5,11 @@ import com.sokkun.smallfasttransfer.api.response.BalanceRes
 import com.sokkun.smallfasttransfer.api.response.TotalBalanceRes
 import com.sokkun.smallfasttransfer.common.getOrElseThrow
 import com.sokkun.smallfasttransfer.domain.model.Balance
+import com.sokkun.smallfasttransfer.domain.projection.ParticipantBalanceProjection
 import com.sokkun.smallfasttransfer.domain.spec.BalanceSpec
 import com.sokkun.smallfasttransfer.repository.BalanceRepository
 import com.sokkun.smallfasttransfer.repository.CurrencyTypeRepository
+import com.sokkun.smallfasttransfer.repository.ParticipantRepository
 import com.sokkun.smallfasttransfer.repository.ParticipantUserRepository
 import com.sokkun.smallfasttransfer.service.IBalanceService
 import org.springframework.data.jpa.domain.Specification
@@ -18,6 +20,7 @@ import java.math.BigDecimal
 class BalanceService(
     private val balanceRepo: BalanceRepository,
     private val currencyRepo: CurrencyTypeRepository,
+    private val participantRepo: ParticipantRepository,
     private val participantUserRepo: ParticipantUserRepository
 ) : IBalanceService {
     override fun getByUserId(id: Long): List<BalanceRes> {
@@ -31,7 +34,11 @@ class BalanceService(
     }
 
     override fun getTotalBalanceOfParticipantId(id: Long): List<TotalBalanceRes> {
-        TODO("Not yet implemented")
+        getOrElseThrow("Participant", id, participantRepo::findById)
+
+        val balance = balanceRepo.findTotalBalanceParticipant(participantId = id)
+
+        return balance.map { toResponseTotalBalance(it) }
     }
 
     override fun create(balance: BalanceReq): Balance {
@@ -46,5 +53,16 @@ class BalanceService(
         }
 
         return balanceRepo.save(newBalance)
+    }
+
+    fun toResponseTotalBalance(balance: ParticipantBalanceProjection): TotalBalanceRes {
+        val participant = getOrElseThrow("Participant", balance.participantId, participantRepo::findById)
+        val currency = getOrElseThrow("Currency", balance.currencyId, currencyRepo::findById)
+
+        return TotalBalanceRes(
+            totalBalance = balance.totalBalance,
+            participant = participant.toShortResponse(),
+            currency = currency
+        )
     }
 }
