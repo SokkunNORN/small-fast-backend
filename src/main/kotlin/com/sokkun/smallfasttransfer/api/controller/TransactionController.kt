@@ -8,6 +8,7 @@ import com.sokkun.smallfasttransfer.api.response.helper.ResponseWrapper
 import com.sokkun.smallfasttransfer.api.response.helper.ok
 import com.sokkun.smallfasttransfer.service.ITransactionService
 import org.springframework.data.domain.Pageable
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,7 +25,7 @@ class TransactionController(
     fun create(@RequestBody transactionReq: TransactionReq): ResponseWrapper<TransactionRes> =
         ok(service.create(transactionReq))
 
-    @PostMapping("/sent/{id}")
+    @PostMapping("/send/{id}")
     fun sentTransaction(@PathVariable id: Long): ResponseWrapper<TransactionRes> = ok(service.send(id))
 
     @GetMapping("/pending")
